@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ทะเบียนแหล่งข้อมูล</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+Thai:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#E9ECEA; --surface:#FDFDFC; --sunk:#F1F3F1; --line:#D4DAD6; --line-strong:#B9C2BD;
+  --ink:#14201D; --muted:#5A6763; --faint:#87938E;
+  --accent:#12594F; --accent-ink:#0B3F38; --accent-soft:#D6E7E2; --accent-on:#FFFFFF;
+  --warn:#8C5510; --warn-soft:#F4E6D2;
+  --d1:#3A5A88; --d1s:#DDE5F0;
+  --d2:#12716A; --d2s:#D5E9E6;
+  --d3:#8A5E14; --d3s:#F1E6CE;
+  --d4:#4A6F2E; --d4s:#DFE9D4;
+  --d5:#74478A; --d5s:#E8DEEE;
+  --d6:#9E4F3A; --d6s:#F2DFD8;
+  --d0:#6B7671; --d0s:#E4E8E5;
+  --shadow:0 1px 2px rgba(20,32,29,.06), 0 8px 24px -12px rgba(20,32,29,.22);
+  --radius:10px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111716; --surface:#1A2120; --sunk:#161D1C; --line:#2B3533; --line-strong:#3D4946;
+  --ink:#E7ECE9; --muted:#9BA8A3; --faint:#78847F;
+  --accent:#5FC2B3; --accent-ink:#8FD8CC; --accent-soft:#1D3733; --accent-on:#0C1817;
+  --warn:#D9A05B; --warn-soft:#332818;
+  --d1:#8FAEDC; --d1s:#22303F;
+  --d2:#6CC7BC; --d2s:#173330;
+  --d3:#D6AC62; --d3s:#332A17;
+  --d4:#9DC57C; --d4s:#232F1C;
+  --d5:#C49BD4; --d5s:#2E2436;
+  --d6:#DE9B84; --d6s:#35251F;
+  --d0:#98A39E; --d0s:#242B29;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#111716; --surface:#1A2120; --sunk:#161D1C; --line:#2B3533; --line-strong:#3D4946;
+  --ink:#E7ECE9; --muted:#9BA8A3; --faint:#78847F;
+  --accent:#5FC2B3; --accent-ink:#8FD8CC; --accent-soft:#1D3733; --accent-on:#0C1817;
+  --warn:#D9A05B; --warn-soft:#332818;
+  --d1:#8FAEDC; --d1s:#22303F;
+  --d2:#6CC7BC; --d2s:#173330;
+  --d3:#D6AC62; --d3s:#332A17;
+  --d4:#9DC57C; --d4s:#232F1C;
+  --d5:#C49BD4; --d5s:#2E2436;
+  --d6:#DE9B84; --d6s:#35251F;
+  --d0:#98A39E; --d0s:#242B29;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"IBM Plex Sans Thai","Noto Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:"Noto Serif Thai","IBM Plex Sans Thai",serif; font-weight:700; line-height:1.35; text-wrap:balance; margin:0}
+button,input{font:inherit; color:inherit}
+a{color:var(--accent-ink)}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace; font-variant-numeric:tabular-nums}
+.wrap{max-width:1120px; margin:0 auto; padding-inline:18px}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* ---------- header + search ---------- */
+header.top{
+  background:var(--surface); border-bottom:1px solid var(--line);
+  position:sticky; top:env(safe-area-inset-top,0px); z-index:30;
+}
+.topbar{display:flex; align-items:center; gap:12px; padding-block:12px; flex-wrap:wrap}
+.brand{display:flex; align-items:baseline; gap:10px; min-width:0}
+.brand h1{font-size:19px; letter-spacing:-.01em}
+.brand .sub{color:var(--faint); font-size:12.5px}
+.search{
+  flex:1 1 300px; display:flex; align-items:center; gap:9px; background:var(--sunk);
+  border:1px solid var(--line); border-radius:99px; padding:7px 15px; min-width:0;
+}
+.search:focus-within{border-color:var(--accent)}
+.search input{border:0; background:transparent; outline:0; width:100%; font-size:14.5px; min-width:0}
+.search input::placeholder{color:var(--faint)}
+.search input::-webkit-search-cancel-button{-webkit-appearance:none; appearance:none}
+.search .clr{border:0; background:transparent; color:var(--faint); cursor:pointer; padding:0 2px; font-size:16px; line-height:1}
+.iconbtn{
+  border:1px solid var(--line); background:var(--surface); color:var(--muted);
+  width:36px; height:36px; border-radius:99px; cursor:pointer; display:grid; place-items:center; font-size:15px; flex:none;
+}
+.iconbtn:hover{border-color:var(--line-strong); color:var(--ink)}
+
+/* ---------- dimension nav ---------- */
+.dimnav{display:flex; gap:7px; flex-wrap:wrap; padding-block:0 12px}
+.dimnav a{
+  display:inline-flex; align-items:center; gap:7px; text-decoration:none; font-size:13px; font-weight:500;
+  border:1px solid var(--line); border-radius:99px; padding:4px 13px 4px 9px; color:var(--muted); background:var(--surface);
+}
+.dimnav a:hover{border-color:var(--line-strong); color:var(--ink)}
+.dot{width:9px; height:9px; border-radius:99px; flex:none}
+.dimnav a .c{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--faint)}
+
+main{padding-block:24px 72px}
+
+/* ---------- sections ---------- */
+.sec{margin-bottom:34px; scroll-margin-top:96px}
+.sec-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; padding-bottom:10px; border-bottom:2px solid var(--secline); margin-bottom:14px}
+.sec-head h2{font-size:18px}
+.sec-head .n{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--faint)}
+.sec-head .desc{color:var(--muted); font-size:13px; width:100%; margin-top:-2px}
+
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px}
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:15px 16px;
+  display:grid; gap:9px; align-content:start; cursor:pointer; text-align:left; font:inherit; color:inherit;
+}
+.card:hover{border-color:var(--line-strong); box-shadow:var(--shadow)}
+.card .idline{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.card .id{font-size:11.5px; color:var(--faint); letter-spacing:.04em}
+.card h3{font-size:15.5px; font-weight:600; font-family:inherit; line-height:1.45}
+.card .org{color:var(--muted); font-size:12.5px; line-height:1.5}
+.card .tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:2px}
+
+.chip{
+  display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:500;
+  padding:3px 10px; border-radius:99px; background:var(--sunk); color:var(--muted); border:1px solid var(--line);
+  white-space:nowrap;
+}
+.chip.warn{background:var(--warn-soft); color:var(--warn); border-color:transparent}
+.chip.good{background:var(--accent-soft); color:var(--accent); border-color:transparent}
+.chip.dim{border-color:transparent}
+.dim-1{background:var(--d1s); color:var(--d1)} .dim-2{background:var(--d2s); color:var(--d2)}
+.dim-3{background:var(--d3s); color:var(--d3)} .dim-4{background:var(--d4s); color:var(--d4)}
+.dim-5{background:var(--d5s); color:var(--d5)} .dim-6{background:var(--d6s); color:var(--d6)}
+.dim-0{background:var(--d0s); color:var(--d0)}
+mark{background:var(--accent-soft); color:inherit; border-radius:3px; padding:0 1px}
+
+.hits{color:var(--muted); font-size:13.5px; padding-bottom:16px}
+.empty{background:var(--surface); border:1px dashed var(--line-strong); border-radius:var(--radius); padding:40px 20px; text-align:center; color:var(--muted)}
+
+/* ---------- detail dialog ---------- */
+dialog{
+  border:1px solid var(--line); border-radius:14px; padding:0; background:var(--surface); color:var(--ink);
+  max-width:640px; width:calc(100% - 32px); box-shadow:0 30px 70px -30px rgba(0,0,0,.5);
+}
+dialog::backdrop{background:rgba(12,20,18,.5)}
+.dl-head{padding:20px 22px 14px; border-bottom:1px solid var(--line); display:grid; gap:9px}
+.dl-head h2{font-size:19px}
+.dl-dims{display:flex; gap:6px; flex-wrap:wrap; align-items:center}
+.dl-body{padding:18px 22px 22px; display:grid; gap:14px; max-height:min(64vh,560px); overflow:auto}
+.kv{display:grid; grid-template-columns:118px 1fr; gap:8px 14px; font-size:14px}
+.kv dt{color:var(--faint); font-size:12.5px; padding-top:2px}
+.kv dd{margin:0}
+.note{background:var(--sunk); border-left:3px solid var(--line-strong); padding:10px 13px; border-radius:0 8px 8px 0; font-size:13.5px; color:var(--muted)}
+.note.warn{border-left-color:var(--warn); background:var(--warn-soft); color:var(--warn)}
+.eyebrow{font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint); font-weight:600}
+.links{display:grid; gap:7px}
+.links a{
+  display:block; background:var(--accent-soft); color:var(--accent-ink); text-decoration:none;
+  padding:9px 13px; border-radius:8px; font-size:13px; word-break:break-all; border:1px solid transparent;
+}
+.links a:hover{border-color:var(--accent)}
+.dl-foot{padding:0 22px 20px; display:flex; justify-content:flex-end}
+.btn{
+  border:1px solid var(--line); background:transparent; color:var(--muted);
+  padding:8px 18px; border-radius:99px; cursor:pointer; font-weight:600; font-size:14px;
+}
+.btn:hover{color:var(--ink); border-color:var(--line-strong)}
+
+footer.pg{color:var(--faint); font-size:12.5px; border-top:1px solid var(--line); margin-top:36px; padding-top:16px}
+@media (max-width:560px){
+  .brand .sub{display:none}
+  .kv{grid-template-columns:1fr; gap:2px 0}
+  .kv dd{margin-bottom:8px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <h1>ทะเบียนแหล่งข้อมูล</h1>
+        <span class="sub mono" id="brandCount"></span>
+      </div>
+      <label class="search">
+        <span aria-hidden="true" style="color:var(--faint)">⌕</span>
+        <input id="q" type="search" placeholder="ค้นหาชื่อชุดข้อมูล หน่วยงาน ปี หรือคำสำคัญ…" autocomplete="off">
+        <button class="clr" id="clr" type="button" hidden aria-label="ล้างคำค้น">✕</button>
+      </label>
+      <button class="iconbtn" id="themeBtn" title="สลับโหมดสว่าง/มืด" aria-label="สลับโหมดสว่าง/มืด">◐</button>
+    </div>
+    <nav class="dimnav" id="dimnav" aria-label="ข้ามไปยังมิติ"></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="hits" id="hits" hidden></p>
+  <div id="sections"></div>
+  <div class="empty" id="empty" hidden>ไม่พบชุดข้อมูลที่ตรงกับคำค้น — ลองใช้คำสั้นลง เช่น ชื่อหน่วยงาน หรือคำว่า "ผู้สูงอายุ"</div>
+
+  <footer class="pg">
+    รวบรวมจากไฟล์ <span class="mono">list Data source.xlsx</span> — ตรวจสอบปีล่าสุดและเงื่อนไขการใช้งานกับหน่วยงานเจ้าของข้อมูลก่อนนำไปอ้างอิง
+  </footer>
+</main>
+
+<dialog id="dlg">
+  <div class="dl-head">
+    <div class="dl-dims"><span class="mono" id="dlId" style="font-size:12px; color:var(--faint)"></span><span id="dlDim"></span></div>
+    <h2 id="dlName"></h2>
+  </div>
+  <div class="dl-body" id="dlBody"></div>
+  <div class="dl-foot"><button class="btn" id="dlClose">ปิด</button></div>
+</dialog>
+
+<script>
+const DATA = [{"id":"D1","dim":"ข้อมูลพื้นฐาน","name":"จำนวนประชากรกลางปี","years":"2555 - 2568","y0":2555,"y1":2568,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"","method":"(จำนวนประชากรต้นปี +จำนวนประชากรสิ้นปี)/2","org":"สำนักบริหารการทะเบียน กรมการปกครอง","urls":["https://stat.bora.dopa.go.th/stat/statnew/statMenu/newStat/home.php","https://stat.bora.dopa.go.th/stat/statnew/statyear/"],"note":"สามารถคำนวนจากข้อมูล สำนักบริหารการทะเบียน กรมการปกครอง · ลิงก์แรกคือหน้าหลักระบบสถิติทางการทะเบียน สำนักบริหารการทะเบียน กรมการปกครอง (เลือกสถิติรายปี รายเดือน รายพื้นที่) ลิงก์ที่สองเข้าหน้าสถิติรายปีโดยตรง — ดาวน์โหลดจำนวนประชากรต้นปีและสิ้นปีรายจังหวัด แล้วนำมาเฉลี่ยตามสูตร","added":true},{"id":"X1","dim":"ข้อมูลพื้นฐาน","name":"ประชากรจำแนกเพศ กลุ่มอายุรายปี","years":"2555 - 2569","y0":2555,"y1":2569,"level":"รายสถานพยาบาล","freq":"","ftype":"API","detail":"","method":"","org":"","urls":["https://www.nso.go.th/public/e-book/Statistical-Yearbook/SYB-2025_webPage/Page_SYB_TH.html"],"note":""},{"id":"D2","dim":"ข้อมูลพื้นฐาน","name":"เนื้อที่ และเขตการปกครอง จำแนกตามภาค และจังหวัด","years":"2567","y0":2567,"y1":2567,"level":"รายจังหวัด","freq":"","ftype":"excel","detail":"ข้อมูลสะสม","method":"","org":"","urls":["https://www.nso.go.th/public/e-book/Statistical-Yearbook/SYB-2025_webPage/Page_SYB_TH.html"],"note":"รายงานสถิติรายปีประเทศไทย 2568 · อยู่ในรายงานสถิติรายปีประเทศไทย 2568 บทที่ 1 ลักษณะทางภูมิศาสตร์และภูมิอากาศ","added":true},{"id":"D3","dim":"ข้อมูลพื้นฐาน","name":"ความหนาแน่นของประชาการในพื้นที่","years":"2567","y0":2567,"y1":2567,"level":"รายจังหวัด","freq":"","ftype":"คำนวณเอง","detail":"คำนวนจาก เองจากข้อมูลพื้นที่ราจังหวัด และจำนวนประชากร","method":"จำนวนประชากร (D1)/พื้นที่ (D2)","org":"","urls":["https://opendata.moph.go.th/api/report_data/s_pop_sex_age/"],"note":""},{"id":"D4","dim":"ข้อมูลพื้นฐาน","name":"จำนวนการเกิดมีชีพทั้งหมด การเกิดมีชีพในโรงพยาบาล และร้อยละการเกิดมีชีพในโรงพยาบาลต่อการเกิดมีชีพทั้งหมด จำแนกเป็นรายภาค และจังหวัด พ.ศ. 2555 - 2567","years":"2555 - 2567","y0":2555,"y1":2567,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"","method":"","org":"","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?order=&search=%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94&impt_side=&impt_branch=&impt_group=0&impt_subgroup=&year=&announcement_date=#gsc.tab=0:~:text=%E0%B8%88%E0%B8%B3%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B5%E0%B8%9E%E0%B8%97%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B8%AB%E0%B8%A1%E0%B8%94%20%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B5%E0%B8%9E%E0%B9%83%E0%B8%99%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B8%9E%E0%B8%A2%E0%B8%B2%E0%B8%9A%E0%B8%B2%E0%B8%A5%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%A3%E0%B9%89%E0%B8%AD%E0%B8%A2%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B5%E0%B8%9E%E0%B9%83%E0%B8%99%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B8%9E%E0%B8%A2%E0%B8%B2%E0%B8%9A%E0%B8%B2%E0%B8%A5%E0%B8%95%E0%B9%88%E0%B8%AD%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94%E0%B8%A1%E0%B8%B5%E0%B8%8A%E0%B8%B5%E0%B8%9E%E0%B8%97%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B8%AB%E0%B8%A1%E0%B8%94%20%E0%B8%88%E0%B8%B3%E0%B9%81%E0%B8%99%E0%B8%81%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%A0%E0%B8%B2%E0%B8%84%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B8%94%20%E0%B8%9E.%E0%B8%A8.%202555%20%2D%202567"],"note":"","added":true},{"id":"D6","dim":"ข้อมูลพื้นฐาน","name":"จำนวนการเกิดจากการทะเบียน จำแนกตามเพศ ภาค และจังหวัด พ.ศ. 2555-2567","years":"2555 - 2567","y0":2555,"y1":2567,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"","method":"","org":"","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?order=&search=%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94&impt_side=&impt_branch=&impt_group=0&impt_subgroup=&year=&announcement_date=#gsc.tab=0:~:text=%E0%B8%88%E0%B8%B3%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94%E0%B8%88%E0%B8%B2%E0%B8%81%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%B0%E0%B9%80%E0%B8%9A%E0%B8%B5%E0%B8%A2%E0%B8%99%20%E0%B8%88%E0%B8%B3%E0%B9%81%E0%B8%99%E0%B8%81%E0%B8%95%E0%B8%B2%E0%B8%A1%E0%B9%80%E0%B8%9E%E0%B8%A8%20%E0%B8%A0%E0%B8%B2%E0%B8%84%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B8%94%20%E0%B8%9E.%E0%B8%A8.%202555%2D2567"],"note":"","added":true},{"id":"D7","dim":"ข้อมูลพื้นฐาน","name":"จำนวนการตายจากการทะเบียน จำแนกตามเพศ ภาค และจังหวัด พ.ศ. 2563-2567","years":"2563 - 2567","y0":2563,"y1":2567,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"จำแนกเพศ","method":"","org":"","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?order=&search=%E0%B8%95%E0%B8%B2%E0%B8%A2&impt_side=&impt_branch=&impt_group=&impt_subgroup=&year=&announcement_date=#gsc.tab=0:~:text=%E0%B8%88%E0%B8%B3%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%95%E0%B8%B2%E0%B8%A2%E0%B8%88%E0%B8%B2%E0%B8%81%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%B0%E0%B9%80%E0%B8%9A%E0%B8%B5%E0%B8%A2%E0%B8%99%20%E0%B8%88%E0%B8%B3%E0%B9%81%E0%B8%99%E0%B8%81%E0%B8%95%E0%B8%B2%E0%B8%A1%E0%B9%80%E0%B8%9E%E0%B8%A8%20%E0%B8%A0%E0%B8%B2%E0%B8%84%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B8%94%20%E0%B8%9E.%E0%B8%A8.%202555%2D2567"],"note":"","added":true},{"id":"D8","dim":"ข้อมูลพื้นฐาน","name":"จำนวนและอัตราตายของทารกแรกเกิด (ต่ำกว่า 28 วัน) อัตราการตายทารก (ต่ำกว่า 1 ปี) จำแนกตามเพศ และอัตราตายมารดา พ.ศ. 2555 - 2564","years":"2555 - 2564","y0":2555,"y1":2564,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"จำแนกเพศ","method":"","org":"","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?order=&search=%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94&impt_side=&impt_branch=&impt_group=0&impt_subgroup=&year=&announcement_date=#gsc.tab=0:~:text=%E0%B8%88%E0%B8%B3%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AD%E0%B8%B1%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%95%E0%B8%B2%E0%B8%A2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%97%E0%B8%B2%E0%B8%A3%E0%B8%81%E0%B9%81%E0%B8%A3%E0%B8%81%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94%20(%E0%B8%95%E0%B9%88%E0%B8%B3%E0%B8%81%E0%B8%A7%E0%B9%88%E0%B8%B2%2028%20%E0%B8%A7%E0%B8%B1%E0%B8%99)%20%E0%B8%AD%E0%B8%B1%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%95%E0%B8%B2%E0%B8%A2%E0%B8%97%E0%B8%B2%E0%B8%A3%E0%B8%81%20(%E0%B8%95%E0%B9%88%E0%B8%B3%E0%B8%81%E0%B8%A7%E0%B9%88%E0%B8%B2%201%20%E0%B8%9B%E0%B8%B5)%20%E0%B8%88%E0%B8%B3%E0%B9%81%E0%B8%99%E0%B8%81%E0%B8%95%E0%B8%B2%E0%B8%A1%E0%B9%80%E0%B8%9E%E0%B8%A8%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AD%E0%B8%B1%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%95%E0%B8%B2%E0%B8%A2%E0%B8%A1%E0%B8%B2%E0%B8%A3%E0%B8%94%E0%B8%B2%20%E0%B8%9E.%E0%B8%A8.%202555%20%2D%202564"],"note":"","added":true},{"id":"D9","dim":"ข้อมูลพื้นฐาน","name":"จำนวนการตายทั้งหมด การตายในโรงพยาบาล และร้อยละการตายในโรงพยาบาลต่อการตายทั้งหมด จำแนกเป็นรายภาค และจังหวัด พ.ศ. 2555 - 2567","years":"2563 - 2567","y0":2563,"y1":2567,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"","method":"","org":"","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?order=&search=%E0%B8%95%E0%B8%B2%E0%B8%A2&impt_side=&impt_branch=&impt_group=&impt_subgroup=&year=&announcement_date=#gsc.tab=0:~:text=%E0%B8%88%E0%B8%B3%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%95%E0%B8%B2%E0%B8%A2%E0%B8%97%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B8%AB%E0%B8%A1%E0%B8%94%20%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%95%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%99%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B8%9E%E0%B8%A2%E0%B8%B2%E0%B8%9A%E0%B8%B2%E0%B8%A5%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%A3%E0%B9%89%E0%B8%AD%E0%B8%A2%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%95%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%99%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B8%9E%E0%B8%A2%E0%B8%B2%E0%B8%9A%E0%B8%B2%E0%B8%A5%E0%B8%95%E0%B9%88%E0%B8%AD%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%95%E0%B8%B2%E0%B8%A2%E0%B8%97%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B8%AB%E0%B8%A1%E0%B8%94%20%E0%B8%88%E0%B8%B3%E0%B9%81%E0%B8%99%E0%B8%81%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%A0%E0%B8%B2%E0%B8%84%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B8%94%20%E0%B8%9E.%E0%B8%A8.%202555%20%2D%202567"],"note":"","added":true},{"id":"D10","dim":"สังคมและเศรษฐกิจ","name":"รายได้เฉลี่ยต่อเดือนของครัวเรือน","years":"2547 - 2566","y0":2547,"y1":2566,"level":"รายจังหวัด","freq":"ทุก 2 ปี","ftype":"excel","detail":"","method":"","org":"","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?order=&search=%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B9%84%E0%B8%94%E0%B9%89%E0%B9%80%E0%B8%89%E0%B8%A5%E0%B8%B5%E0%B9%88%E0%B8%A2&impt_side=&impt_branch=&impt_group=0&impt_subgroup=&year=&announcement_date="],"note":"","added":true},{"id":"D11","dim":"สังคมและเศรษฐกิจ","name":"ค่าใช้จ่ายเฉลี่ยต่อเดือน ต่อครัวเรือน","years":"2555 - 2566","y0":2555,"y1":2566,"level":"รายจังหวัด","freq":"ทุก 2 ปี","ftype":"excel","detail":"","method":"","org":"","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?order=&search=%E0%B8%84%E0%B9%88%E0%B8%B2%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B8%88%E0%B9%88%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%89%E0%B8%A5%E0%B8%B5%E0%B9%88%E0%B8%A2&impt_side=&impt_branch=&impt_group=0&impt_subgroup=&year=&announcement_date=#gsc.tab=0"],"note":"","added":true},{"id":"D12","dim":"สังคมและเศรษฐกิจ","name":"หนี้สินเฉลี่ยต่อครัวเรือน","years":"2547 - 2666","y0":2547,"y1":2547,"level":"รายจังหวัด","freq":"ทุก 2 ปี","ftype":"excel","detail":"","method":"","org":"","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?order=&search=%E0%B8%AB%E0%B8%99%E0%B8%B5%E0%B9%89%E0%B8%AA%E0%B8%B4%E0%B8%99%E0%B9%80%E0%B8%89%E0%B8%A5%E0%B8%B5%E0%B9%88%E0%B8%A2&impt_side=&impt_branch=&impt_group=0&impt_subgroup=&year="],"note":"","added":true},{"id":"D13","dim":"สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)","name":"พื้นที่สีเขียวสาธารณะต่อประชากร","years":"2563-2569","y0":2563,"y1":2569,"level":"รายตำบล","freq":"ทุกปี","ftype":"excel","detail":"","method":"","org":"ระบบฐานข้อมูลด้านสิ่งแวดล้อมและพื้นที่สีเขียว กระทรวงทรัพยากรธรรมชาติและสิ่งแวดล้อม","urls":["https://tgu.onep.go.th/"],"note":"ข้อมูลปริมาณพื้นที่สีเขียวในเมือง"},{"id":"D14–15","dim":"สุขภาพ (Health)","name":"อายุคาดเฉลี่ย (LE) และอายุคาดเฉลี่ยของการมีสุขภาวะ (HALE)","years":"2562-2567","y0":2562,"y1":2567,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"ชุดเดียวกัน ประกอบด้วย LE (ปี 2562-2567) และ HALE (ปี 2564-2567) รายจังหวัดและรายอำเภอ","method":"","org":"สํานักงานพัฒนานโยบายสุขภาพระหว่างประเทศ กลุ่มงานพัฒนาดัชนีภาระโรคแห่งประเทศไทย","urls":["https://le-hale.bodthai.net/district-province/district.html"],"note":"เดิมแยกเป็น D14 (LE) และ D15 (HALE) ในไฟล์ต้นฉบับ"},{"id":"D16","dim":"สุขภาพ (Health)","name":"ค่าใช้จ่ายด้านสุขภาพ/เดือน/ครัวเรือน","years":"2563-2567","y0":2563,"y1":2567,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"","method":"","org":"ต้องทำหนังสือขอจากสำนักงานสถิติ","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?order=&search=%E0%B8%84%E0%B9%88%E0%B8%B2%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B8%88%E0%B9%88%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%89%E0%B8%A5%E0%B8%B5%E0%B9%88%E0%B8%A2&impt_side=&impt_branch=&impt_group=0&impt_subgroup=&year=&announcement_date=#gsc.tab=0"],"note":"ข้อมูลเศรษฐกิจ (สำนักงานสถิติ) · ยอดรวมค่าใช้จ่ายครัวเรือนเผยแพร่สาธารณะ แต่รายการแยกหมวดสุขภาพต้องทำหนังสือขอจากสำนักงานสถิติแห่งชาติ · ย้ายจาก \"สังคมและเศรษฐกิจ\" มาเป็นสุขภาพ เพราะวัดภาระค่าใช้จ่ายด้านสุขภาพของครัวเรือน","added":true},{"id":"D17","dim":"สุขภาพ (Health)","name":"สาเหตุการเสียชีวิตรายพื้นที่","years":"","y0":null,"y1":null,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"API","detail":"","method":"","org":"สำนักงานปลัดกระทรวงสาธารณสุข กระทรวงสาธารณสุข","urls":["https://opendata.moph.go.th/th/services/summary-table/ac4eed1bddb23d6130746d62d2538fd0"],"note":""},{"id":"D18","dim":"สังคมและเศรษฐกิจ","name":"เส้นความยากจน (ด้านรายจ่าย) จำแนกเป็นรายภาค และจังหวัด พ.ศ. 2555 - 2566","years":"2555 - 2566","y0":2555,"y1":2566,"level":"รายจังหวัด","freq":"ทุก 2 ปี","ftype":"excel","detail":"","method":"","org":"สำนักงานสถิติ","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?impt_side=7#gsc.tab=0:~:text=%E0%B9%80%E0%B8%AA%E0%B9%89%E0%B8%99%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%A2%E0%B8%B2%E0%B8%81%E0%B8%88%E0%B8%99%20(%E0%B8%94%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%88%E0%B9%88%E0%B8%B2%E0%B8%A2)%20%E0%B8%88%E0%B8%B3%E0%B9%81%E0%B8%99%E0%B8%81%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%A0%E0%B8%B2%E0%B8%84%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B8%94%20%E0%B8%9E.%E0%B8%A8.%202555%20%2D%202566"],"note":"ความยากจน"},{"id":"D19","dim":"สังคมและเศรษฐกิจ","name":"สัดส่วนคนจน (ด้านรายจ่าย) จำแนกเป็นรายภาค และจังหวัด พ.ศ. 2555 - 2566","years":"2555 - 2566","y0":2555,"y1":2566,"level":"รายจังหวัด","freq":"ทุก 2 ปี","ftype":"excel","detail":"","method":"","org":"สำนักงานสถิติ","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?impt_side=7#gsc.tab=0:~:text=%E0%B8%AA%E0%B8%B1%E0%B8%94%E0%B8%AA%E0%B9%88%E0%B8%A7%E0%B8%99%E0%B8%84%E0%B8%99%E0%B8%88%E0%B8%99%20(%E0%B8%94%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%88%E0%B9%88%E0%B8%B2%E0%B8%A2)%20%E0%B8%88%E0%B8%B3%E0%B9%81%E0%B8%99%E0%B8%81%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%A0%E0%B8%B2%E0%B8%84%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B8%94%20%E0%B8%9E.%E0%B8%A8.%202555%20%2D%202566"],"note":"ความยากจน"},{"id":"D20","dim":"สังคมและเศรษฐกิจ","name":"จำนวนคนจน (ด้านรายจ่าย) จำแนกเป็นรายภาค และจังหวัด พ.ศ. 2555 - 2566","years":"2555 - 2566","y0":2555,"y1":2566,"level":"รายจังหวัด","freq":"ทุก 2 ปี","ftype":"excel","detail":"","method":"","org":"สำนักงานสถิติ","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?impt_side=7#gsc.tab=0:~:text=%E0%B8%88%E0%B8%B3%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B8%84%E0%B8%99%E0%B8%88%E0%B8%99%20(%E0%B8%94%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%88%E0%B9%88%E0%B8%B2%E0%B8%A2)%20%E0%B8%88%E0%B8%B3%E0%B9%81%E0%B8%99%E0%B8%81%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%A0%E0%B8%B2%E0%B8%84%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%88%E0%B8%B1%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B8%94%20%E0%B8%9E.%E0%B8%A8.%202555%20%2D%202566"],"note":"ความยากจน"},{"id":"D21","dim":"ข้อมูลพื้นฐาน","name":"จำนวนประชากรผู้สูงอายุ","years":"2545-2567","y0":2545,"y1":2567,"level":"รายจังหวัด","freq":"ทุก 3 ปี","ftype":"excel","detail":"จำแนกเพศ","method":"","org":"สำนักงานสถิติ","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?impt_side=7#gsc.tab=0:~:text=%E0%B8%88%E0%B8%B3%E0%B8%99%E0%B8%A7%E0%B8%99%20%E0%B8%A3%E0%B9%89%E0%B8%AD%E0%B8%A2%E0%B8%A5%E0%B8%B0%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%AD%E0%B8%B1%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%8A%E0%B8%B2%E0%B8%81%E0%B8%A3%E0%B8%AA%E0%B8%B9%E0%B8%87%E0%B8%AD%E0%B8%B2%E0%B8%A2%E0%B8%B8%20%E0%B8%88%E0%B8%B3%E0%B9%81%E0%B8%99%E0%B8%81%E0%B8%95%E0%B8%B2%E0%B8%A1%E0%B9%80%E0%B8%9E%E0%B8%A8%20%E0%B8%88%E0%B8%B1%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%B1%E0%B8%94%20%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%A0%E0%B8%B2%E0%B8%84%20%E0%B8%9E.%E0%B8%A8.%202564%20%E0%B9%81%E0%B8%A5%E0%B8%B0%20%E0%B8%9E.%E0%B8%A8.%202567%20(%E0%B8%AA%E0%B8%AA%E0%B8%8A.%E0%B8%AA%E0%B8%B3%E0%B8%A3%E0%B8%A7%E0%B8%88%E0%B8%97%E0%B8%B8%E0%B8%81%203%20%E0%B8%9B%E0%B8%B5)"],"note":"ผู้สูงอายุ · ย้ายจาก \"สิ่งแวดล้อมและโครงสร้างพื้นฐาน\" มาเป็นข้อมูลพื้นฐาน เพราะเป็นโครงสร้างประชากร"},{"id":"D22","dim":"ข้อมูลพื้นฐาน","name":"สถิติผู้สูงอายุ","years":"2547-2569","y0":2547,"y1":2569,"level":"รายตำบล","freq":"รายเดือน","ftype":"excel","detail":"สถิติผู้สูงอายุทั่วไป อัตราส่วนภาระพึ่งพิง รายจังหวัด อำเภอ และตำบล · ด้านสุขภาพ: ผู้ป่วยจำแนกตามโรคหลัก ภาวะพึ่งพิง ผลประเมิน ADL ความพิการ การพลัดตกหกล้ม · ด้านสวัสดิการ: ผู้สูงอายุที่อยู่ลำพังหรือดูแลตนเอง การใช้ส้วม ผู้รับเบี้ยยังชีพ · รายงานสถานการณ์ผู้สูงอายุไทยรายปี (ไทย/อังกฤษ) ตั้งแต่ปี 2547","method":"","org":"กรมกิจการผู้สูงอายุ","urls":["https://www.dop.go.th/th/statistics_page?cat=1&id=1"],"note":"อัปเดตรายเดือน ข้อมูลล่าสุดถึงเดือนสิงหาคม 2569 · ย้ายจาก \"สิ่งแวดล้อมและโครงสร้างพื้นฐาน\" มาเป็นข้อมูลพื้นฐาน เพราะเป็นโครงสร้างประชากร"},{"id":"D23","dim":"สุขภาพ (Health)","name":"จำนวนผู้ป่วยใน (หลักประกันสุขภาพถ้วนหน้า และสวัสดิการรักษาพยาบาลข้าราชการและครอบครัว) รวมทุกการวินิจฉัยโรค จำแนกตามเพศและโรค/กลุ่มโรค 298 โรค ตามบัญชีจำแนกโรคระหว่างประเทศ ฉบับแก้ไข ครั้งที่ 10 ทั่วราชอาณาจักร พ.ศ. 2560 - 2567","years":"2560 - 2567","y0":2560,"y1":2567,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"จำนวนผู้ป่วยรายโรค/จำแนกเพศ/","method":"","org":"สำนักงานปลัดกระทรวงสาธารณสุข กระทรวงสาธารณสุข","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?%2Fnso%2Fstatistics_and_indicators=&impt_side=7&page=2#gsc.tab=0:~:text=%E0%B8%88%E0%B8%B3%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B8%9C%E0%B8%B9%E0%B9%89%E0%B8%9B%E0%B9%88%E0%B8%A7%E0%B8%A2%E0%B8%99%E0%B8%AD%E0%B8%81%20%E0%B8%88%E0%B8%B3%E0%B9%81%E0%B8%99%E0%B8%81%E0%B8%95%E0%B8%B2%E0%B8%A1%E0%B8%81%E0%B8%A5%E0%B8%B8%E0%B9%88%E0%B8%A1%E0%B8%AA%E0%B8%B2%E0%B9%80%E0%B8%AB%E0%B8%95%E0%B8%B8%E0%B8%9B%E0%B9%88%E0%B8%A7%E0%B8%A2%2021%20%E0%B9%82%E0%B8%A3%E0%B8%84%20%E0%B8%88%E0%B8%B2%E0%B8%81%E0%B8%AA%E0%B8%96%E0%B8%B2%E0%B8%99%E0%B8%9A%E0%B8%A3%E0%B8%B4%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B2%E0%B8%98%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B8%AA%E0%B8%B8%E0%B8%82%20%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B8%97%E0%B8%A3%E0%B8%A7%E0%B8%87%E0%B8%AA%E0%B8%B2%E0%B8%98%E0%B8%B2%E0%B8%A3%E0%B8%93%E0%B8%AA%E0%B8%B8%E0%B8%82%20%E0%B8%97%E0%B8%B1%E0%B9%88%E0%B8%A7%E0%B8%A3%E0%B8%B2%E0%B8%8A%E0%B8%AD%E0%B8%B2%E0%B8%93%E0%B8%B2%E0%B8%88%E0%B8%B1%E0%B8%81%E0%B8%A3%20%E0%B8%9E.%E0%B8%A8.%202555%20%2D%202567"],"note":""},{"id":"D24","dim":"สุขภาพ (Health)","name":"จำนวนผู้ป่วยนอก จำแนกตามกลุ่มสาเหตุป่วย 21 โรค จากสถานบริการสาธารณสุข ของกระทรวงสาธารณสุข ทั่วราชอาณาจักร พ.ศ. 2555 - 2567","years":"2555 - 2567","y0":2555,"y1":2567,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"","method":"","org":"สำนักงานปลัดกระทรวงสาธารณสุข กระทรวงสาธารณสุข","urls":["https://opendata.moph.go.th/th/main"],"note":"ไม่รวม กทม."},{"id":"D25","dim":"สังคมและเศรษฐกิจ","name":"จำนวนผู้มีงานทำที่อยู่ในแรงงานในระบบและนอกระบบ จำแนกตามกลุ่มอายุ เพศ เป็นรายภาค และจังหวัด พ.ศ. 2555 - 2567","years":"2563-2568","y0":2563,"y1":2568,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"","method":"","org":"สำนักงานสถิติแห่งชาติ กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม","urls":["https://opendata.moph.go.th/th/main"],"note":""},{"id":"D26","dim":"สังคมและเศรษฐกิจ","name":"อัตราการว่างงาน + อัตราการมีงานทำ","years":"2563-2568","y0":2563,"y1":2568,"level":"รายจังหวัด","freq":"รายไตรมาส","ftype":"excel","detail":"","method":"","org":"สำนักงานสถิติ","urls":["https://www.nso.go.th/nsoweb/nso/survey_detail/9u"],"note":""},{"id":"D27","dim":"สังคมและเศรษฐกิจ","name":"ดัชนีความเหลื่อมล้ำของรายได้","years":"2566","y0":2566,"y1":2566,"level":"รายจังหวัด","freq":"ทุก 2 ปี","ftype":"excel","detail":"","method":"","org":"รายได้และการประจายรายได้ของครัวเรือน พ.ศ. 2566 สำนักงานสถิติแห่งชาติ\nกระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม","urls":["https://www.nso.go.th/public/e-book/Analytical-Reports/Income-2566/246/"],"note":"รายงานรายได้และการกระจายรายได้ของครัวเรือน พ.ศ. 2566 ระดับจังหวัด — ค่าสัมประสิทธิ์ความไม่เสมอภาค (Gini) อยู่ในตารางภาคผนวกของรายงาน","added":true},{"id":"D28","dim":"ข้อมูลพื้นฐาน","name":"ระบบบริการข้อมูลสถิติชีพประเทศไทย กระทรวงสาธารณสุข","years":"2563-2567","y0":2563,"y1":2567,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"","method":"","org":"กองยุทธศาสตร์และแผนงาน กระทรวงสาธารณสุข","urls":["https://vitalstat.moph.go.th/register"],"note":""},{"id":"D29","dim":"สุขภาพ (Health)","name":"สาเหตุการตาย","years":"2563-2569","y0":2563,"y1":2569,"level":"รายชุมชน","freq":"รายเดือน","ftype":"excel","detail":"","method":"","org":"ระบบคลังข้อมูลด้านการแพทย์และสุขภาพ (HDC) กระทรวงสาธารณสุข","urls":["https://vitalstat.moph.go.th/"],"note":"ย้ายจาก \"ข้อมูลพื้นฐาน\" มาเป็นสุขภาพ ให้อยู่กลุ่มเดียวกับ D17 สาเหตุการเสียชีวิต"},{"id":"D31","dim":"สุขภาพ (Health)","name":"ThaiRSC — ศูนย์ข้อมูลอุบัติเหตุทางถนน","years":"2568-2569","y0":2568,"y1":2569,"level":"รายตำบล","freq":"รายวัน","ftype":"excel","detail":"จำนวนผู้เสียชีวิตและผู้บาดเจ็บจากอุบัติเหตุทางถนน จำแนกตามเพศ กลุ่มอายุ และช่วงเวลา ดูได้ระดับจังหวัด อำเภอ และตำบล พร้อมค้นหาจุดเกิดเหตุในรัศมีที่กำหนดบนแผนที่","method":"","org":"บริษัท กลางคุ้มครองผู้ประสบภัยจากรถ จำกัด","urls":["https://www.thairsc.com/"],"note":"มีข้อมูลย้อนหลังอย่างน้อยตั้งแต่ทศวรรษแห่งความปลอดภัยทางถนน พ.ศ. 2554"},{"id":"D32","dim":"สุขภาพ (Health)","name":"สถานการณ์พฤติกรรมด้านกิจกรรมทางกาย และพฤติกรรมเนือยนิ่ง ของประชากรไทย","years":"2564","y0":2564,"y1":2564,"level":"รายจังหวัด","freq":"ทุก 4 ปี","ftype":"excel","detail":"","method":"","org":"การสำรวจพฤติกรรมด้านสุขภาพของประชากรปี 2564 สำนักงานสถิติ","urls":["https://gdcatalog.go.th/dataset/gdpublish-0404-05-0003"],"note":""},{"id":"D35","dim":"สุขภาพ (Health)","name":"ข้อมูลภาวะสุขภาพของประชากรรายพื้นที่ (Area-based Population Health Profile)","years":"2565-2568","y0":2565,"y1":2568,"level":"รายชุมชน","freq":"Real Time","ftype":"excel","detail":"","method":"","org":"สำนักงานหลักประกันสุขภาพแห่งชาติ","urls":["https://bi.nhso.go.th/views/PopulationHealthProfile/PopHealthProfile?%3Aembed=y&%3AisGuestRedirectFromVizportal=y"],"note":""},{"id":"D36","dim":"สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)","name":"อัตราการใช้อินเตอร์เน็ต","years":"2565-2568","y0":2565,"y1":2568,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"","method":"","org":"","urls":["https://www.nso.go.th/nsoweb/nso/survey_detail/jJ"],"note":"สำรวจการมีการใช้เทคโนโลยีสารสนเทศและการสื่อสารในครัวเรือน สำนักงานสถิติแห่งชาติ","added":true},{"id":"D37","dim":"การศึกษาและพัฒนาศักยภาพ (Education & Human Capital)","name":"คุณภาพการศึกษาระดับจังหวัด","years":"2565-2568","y0":2565,"y1":2568,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"excel","detail":"","method":"","org":"","urls":["https://isted.onec.go.th/kpi"],"note":"ลิงก์ nso survey_detail/jJ ในไฟล์ต้นฉบับชี้ไปที่แบบสำรวจ ICT ในครัวเรือน (ดู D36) จึงตัดออก เหลือแหล่งจริงคือ ISTED สภาการศึกษา · ย้ายจาก \"สิ่งแวดล้อมและโครงสร้างพื้นฐาน\" มาเป็นการศึกษาและพัฒนาศักยภาพ"},{"id":"D38","dim":"สังคมและเศรษฐกิจ","name":"อัตราการมีงานทำของผู้สูงอายุ","years":"2560-2568","y0":2560,"y1":2568,"level":"รายจังหวัด","freq":"รายเดือน","ftype":"excel","detail":"","method":"","org":"","urls":["https://www.nso.go.th/nsoweb/nso/survey_detail/9u","https://www.nso.go.th/nsoweb/nso/survey_detail/9u#gsc.tab=0"],"note":"ย้ายจาก \"สิ่งแวดล้อมและโครงสร้างพื้นฐาน\" มาเป็นสังคมและเศรษฐกิจ เพราะเป็นข้อมูลด้านแรงงาน"},{"id":"D39","dim":"สังคมและเศรษฐกิจ","name":"ข้อมูลการใช้จ่ายภาครัฐ","years":"2559-2568","y0":2559,"y1":2568,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"API","detail":"","method":"","org":"สำนักงานพัฒนารัฐบาลดิจิทัล (องค์การมหาชน) (สพร.)","urls":["https://govspendingbeta.data.go.th/api/documentation"],"note":""},{"id":"D40","dim":"สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)","name":"อัตราคดีอาญาที่กระทบชีวิตและทรัพย์สิน","years":"2563-2565","y0":2563,"y1":2565,"level":"รายจังหวัด","freq":"ทุก 2 ปี","ftype":"excel","detail":"","method":"","org":"2.\tสถิติคดีอาญาความผิดเกี่ยวกับทรัพย์ จำแนกตามประเภทความผิด รายจังหวัด พ.ศ. 2560 – 2565","urls":["https://www.nso.go.th/nsoweb/nso/statistics_and_indicators?impt_branch=310"],"note":""},{"id":"D41","dim":"สุขภาพ (Health)","name":"ฐานข้อมูลการถ่ายโอนภารกิจ สอน./รพ.สต.","years":"","y0":null,"y1":null,"level":"","freq":"","ftype":"","detail":"","method":"","org":"สถาบันวิจัยระบบสาธารณสุข (Health Systems Research institute)","urls":["https://hsiu.hsri.or.th/"],"note":"ย้ายจาก \"สิ่งแวดล้อมและโครงสร้างพื้นฐาน\" มาเป็นสุขภาพ เพราะเป็นข้อมูลระบบบริการสุขภาพ"},{"id":"D42","dim":"สุขภาพ (Health)","name":"ระบบแสดงผลข้อมูลสุขภาพ","years":"","y0":null,"y1":null,"level":"","freq":"","ftype":"","detail":"","method":"","org":"สำนักงานพัฒนาระบบข้อมูลข่าวสารสุขภาพ","urls":["https://www.hiso.or.th/portal/"],"note":""},{"id":"D43","dim":"สุขภาพ (Health)","name":"SHARE Dashboard — ข้อมูลทรัพยากรทางสังคมและสุขภาพเพื่อเสริมศักยภาพพื้นที่","years":"","y0":null,"y1":null,"level":"รายชุมชน","freq":"","ftype":"dashboard","detail":"ทุนทางสังคม ปัจจัยกำหนดสุขภาพ และทรัพยากรด้านสุขภาพรายพื้นที่ ครอบคลุม 13 เขตสุขภาพ ลงถึงระดับอำเภอและชุมชน","method":"","org":"สำนักงานคณะกรรมการสุขภาพแห่งชาติ (สช.) ร่วมกับ สสส. สปสช. และ พอช.","urls":["https://infocenter.nationalhealth.or.th/share-dashboard/"],"note":"หน้าแดชบอร์ดไม่ได้ระบุช่วงปีและความถี่การอัปเดตไว้ — ต้องเปิดดูในระบบ"},{"id":"D44","dim":"สังคมและเศรษฐกิจ","name":"ดัชนีความอยู่ดีมีสุขของประชากรและสังคม (Thailand Well-being Index: TWBI)","years":"","y0":null,"y1":null,"level":"","freq":"","ftype":"dashboard","detail":"แดชบอร์ด Power BI ระดับประเทศและเขตสุขภาพ เชื่อมโยงกับ HISO มีสื่อประกอบ TWBI Classroom","method":"","org":"สำนักงานคณะกรรมการสุขภาพแห่งชาติ (สช.)","urls":["https://infocenter.nationalhealth.or.th/twbi/"],"note":"หน้าแดชบอร์ดไม่ได้ระบุช่วงปีและระดับพื้นที่ย่อยไว้ — ต้องเปิดดูในระบบ"},{"id":"D52","dim":"สุขภาพ (Health)","name":"HDC — ระบบคลังข้อมูลด้านการแพทย์และสุขภาพ (ชุดข้อมูล 43 แฟ้ม)","years":"","y0":null,"y1":null,"level":"รายสถานพยาบาล","freq":"รายวัน","ftype":"dashboard","detail":"รายงานมาตรฐานที่ประมวลจากชุดข้อมูล 43 แฟ้มซึ่งหน่วยบริการทั่วประเทศส่งเข้าระบบ ครอบคลุมข้อมูลประชากร อนามัยแม่และเด็ก โรคไม่ติดต่อเรื้อรัง ทันตกรรม สุขภาพจิต ผู้สูงอายุ การส่งเสริมป้องกันโรค และตัวชี้วัดกระทรวง ดูได้ตั้งแต่ระดับเขตสุขภาพ จังหวัด อำเภอ ตำบล ถึงหน่วยบริการ","method":"","org":"กองยุทธศาสตร์และแผนงาน สำนักงานปลัดกระทรวงสาธารณสุข","urls":["https://hdc.moph.go.th/center/public/main"],"note":"รายงานหน้าสาธารณะเปิดดูได้ ส่วนรายงานเชิงลึกและการดาวน์โหลดต้องใช้บัญชีของหน่วยงานในสังกัด · เป็นต้นทางของข้อมูลหลายรายการในทะเบียนนี้ เช่น D29 สาเหตุการตาย"},{"id":"D53","dim":"การมีส่วนร่วมของประชาชน (Civic Engagement)","dims":["การมีส่วนร่วมของประชาชน (Civic Engagement)","สังคมและเศรษฐกิจ"],"name":"ระบบ BI กรมส่งเสริมการปกครองท้องถิ่น (DLA)","years":"","y0":null,"y1":null,"level":"","freq":"","ftype":"dashboard","detail":"แดชบอร์ด Tableau ของกรมส่งเสริมการปกครองท้องถิ่น สำหรับข้อมูลองค์กรปกครองส่วนท้องถิ่น","method":"","org":"กรมส่งเสริมการปกครองท้องถิ่น กระทรวงมหาดไทย","urls":["https://bi.dla.go.th/","https://opendata.dla.go.th/"],"note":"ต้องเข้าสู่ระบบก่อนจึงจะดูแดชบอร์ดได้ ยังไม่ได้ยืนยันว่ามีชุดข้อมูลใดบ้าง ระดับพื้นที่ และช่วงปี · ลิงก์ที่สองคือ DLA Open Data ที่เปิดให้ดาวน์โหลดได้โดยไม่ต้องล็อกอิน เช่น ผู้ได้รับเบี้ยยังชีพ และรายชื่อที่ตั้ง อปท."},{"id":"D49","dim":"สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)","dims":["สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)","สุขภาพ (Health)"],"name":"Air4Thai — คุณภาพอากาศและฝุ่น PM2.5 จากสถานีตรวจวัดอัตโนมัติ","years":"","y0":null,"y1":null,"level":"รายสถานีตรวจวัด","freq":"รายชั่วโมง","ftype":"API","detail":"ดัชนีคุณภาพอากาศ (AQI) และค่า PM2.5 PM10 O3 CO NO2 SO2 เฉลี่ยรายชั่วโมง จากสถานีตรวจวัดอัตโนมัติทั่วประเทศ พร้อมหน้าข้อมูลย้อนหลังให้เลือกสถานีและช่วงเวลา","method":"","org":"กรมควบคุมมลพิษ กระทรวงทรัพยากรธรรมชาติและสิ่งแวดล้อม","urls":["http://air4thai.pcd.go.th/webV3/","http://air4thai.pcd.go.th/webV2/history/","https://envilink.go.th/dataset/air-quality-pm2point5"],"note":"ลิงก์ที่สองคือหน้าข้อมูลย้อนหลัง ลิงก์ที่สามคือชุดข้อมูลเปิดบน Envilink สำหรับดึงเป็นไฟล์"},{"id":"D50","dim":"สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)","dims":["สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)","สุขภาพ (Health)"],"name":"ระบบติดตามฝุ่น PM2.5 จากดาวเทียม GISTDA","years":"","y0":null,"y1":null,"level":"","freq":"รายชั่วโมง","ftype":"dashboard","detail":"ค่า PM2.5 รายชั่วโมงประมาณจากภาพดาวเทียมฮิมาวาริและดาวเทียมอื่น ครอบคลุมพื้นที่ที่ไม่มีสถานีตรวจวัดภาคพื้นดิน มีหน้าดาวน์โหลดข้อมูลแยกต่างหาก","method":"ประมาณค่าจากข้อมูลดาวเทียมร่วมกับแบบจำลอง","org":"สำนักงานพัฒนาเทคโนโลยีอวกาศและภูมิสารสนเทศ (GISTDA)","urls":["https://pm25.gistda.or.th/","https://pm25.gistda.or.th/download"],"note":"หน้าเว็บทำงานด้วย JavaScript จึงยังไม่ได้ยืนยันระดับพื้นที่และช่วงปีย้อนหลังที่เปิดให้ดาวน์โหลด ต้องเปิดดูในระบบ"},{"id":"D51","dim":"สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)","dims":["สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)","สุขภาพ (Health)"],"name":"DustBoy — เครือข่ายเซนเซอร์ตรวจวัดฝุ่น PM2.5 และ PM10","years":"","y0":null,"y1":null,"level":"รายสถานีตรวจวัด","freq":"รายชั่วโมง","ftype":"API","detail":"ค่าฝุ่นรายชั่วโมงและรายวันจากเครือข่ายเซนเซอร์ DustBoy พร้อมจุดความร้อน (hotspot) ค่าพยากรณ์ สรุป AQI และการประเมินความเสียหายทางเศรษฐกิจและสุขภาพจากมลพิษ","method":"","org":"ศูนย์ข้อมูลการเปลี่ยนแปลงสภาพภูมิอากาศ (CCDC) มหาวิทยาลัยเชียงใหม่","urls":["https://www.cmuccdc.org/","https://open-api.cmuccdc.org/"],"note":"ลิงก์ที่สองคือ Open API สำหรับดึงข้อมูลอัตโนมัติ · เครือข่ายเซนเซอร์หนาแน่นในภาคเหนือ ใช้เสริมจุดที่ Air4Thai ไม่มีสถานี"},{"id":"D48","dim":"สุขภาพ (Health)","name":"รายงานอัตราการฆ่าตัวตาย ศูนย์ป้องกันการฆ่าตัวตายระดับชาติ","years":"","y0":null,"y1":null,"level":"รายจังหวัด","freq":"ทุกปี","ftype":"รายงานออนไลน์","detail":"อัตราการฆ่าตัวตายต่อประชากรแสนคน จำแนกรายจังหวัด ปี เพศ กลุ่มอายุ และเครือข่ายบริการ พร้อมแผนที่ GIS และอันดับ 10 จังหวัดสูงสุด","method":"","org":"ศูนย์ป้องกันการฆ่าตัวตายระดับชาติ กรมสุขภาพจิต กระทรวงสาธารณสุข","urls":["https://suicide.dmh.go.th/report/suicide/main.asp?ndead=1"],"note":"เลือกปีและเงื่อนไขในหน้าเว็บเพื่อสร้างรายงาน หน้าแรกไม่ได้ระบุช่วงปีที่มีข้อมูลทั้งหมด · เป็นรายการเดียวในทะเบียนที่ครอบคลุมด้านสุขภาพจิต"},{"id":"D47","dim":"สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)","name":"IWIS — ระบบฐานข้อมูลและการรายงานคุณภาพน้ำผิวดิน","years":"","y0":null,"y1":null,"level":"รายสถานีตรวจวัด","freq":"Real Time","ftype":"dashboard","detail":"สถานะคุณภาพน้ำ (ดี พอใช้ เสื่อมโทรม เสื่อมโทรมมาก) ค่าออกซิเจนละลายน้ำ (DO) และความเค็ม กรองดูได้รายภาค รายแหล่งน้ำ และรายสถานีตรวจวัด","method":"ค่าเฉลี่ยรายวัน ณ เวลา 09.00 น. ต้องมีข้อมูลอย่างน้อย 40 ค่าต่อสถานี","org":"กรมควบคุมมลพิษ กระทรวงทรัพยากรธรรมชาติและสิ่งแวดล้อม","urls":["https://iwis.pcd.go.th/auto-dashboard"],"note":"รายงานต่อเนื่องแบบใกล้เคียงเวลาจริง หน้าแดชบอร์ดไม่ได้ระบุช่วงปีย้อนหลังที่เปิดให้ดู"},{"id":"D46","dim":"สังคมและเศรษฐกิจ","dims":["สังคมและเศรษฐกิจ","สุขภาพ (Health)","การศึกษาและพัฒนาศักยภาพ (Education & Human Capital)","สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)","การมีส่วนร่วมของประชาชน (Civic Engagement)"],"name":"TPMAP — ระบบบริหารจัดการข้อมูลการพัฒนาคนแบบชี้เป้า (Thai People Map and Analytics Platform)","years":"2560-2569","y0":2560,"y1":2569,"level":"รายครัวเรือน","freq":"ทุกปี","ftype":"dashboard","detail":"ดัชนีความยากจนหลายมิติ (MPI) 5 ด้าน — สุขภาพ ความเป็นอยู่ การศึกษา รายได้ และการเข้าถึงบริการรัฐ ครบ 77 จังหวัด ลงถึงระดับครัวเรือนและรายบุคคล","method":"ผนวกข้อมูลสำรวจ จปฐ. ปี 2568 กับฐานผู้ลงทะเบียนบัตรสวัสดิการแห่งรัฐ ปี 2565","org":"เนคเทค สวทช. (NECTEC-STDC) ร่วมกับ กรมการพัฒนาชุมชน กระทรวงมหาดไทย และกระทรวงการคลัง","urls":["https://www.tpmap.in.th/"],"note":"เป็นแหล่งเดียวในทะเบียนที่มีข้อมูลมิติการศึกษาและการมีส่วนร่วม/การเข้าถึงบริการรัฐ"},{"id":"D45","dim":"","name":"HAI Dashboard","years":"","y0":null,"y1":null,"level":"","freq":"","ftype":"dashboard","detail":"","method":"","org":"","urls":["https://datastudio.google.com/u/0/reporting/b1c76924-3fa4-402b-b079-03be8db1bebe/page/p_o2x1npzi1c"],"note":"แดชบอร์ด Looker Studio — ยังไม่ได้ระบุมิติ หน่วยงานเจ้าของ ช่วงปี และระดับพื้นที่ในทะเบียน"}];
+const DIMS = [
+  {key:"ข้อมูลพื้นฐาน", short:"ข้อมูลพื้นฐาน", cls:"dim-1", v:"--d1",
+   help:"ประชากร พื้นที่ ความหนาแน่น การเกิด การตาย ผู้สูงอายุ และทะเบียนราษฎร"},
+  {key:"สุขภาพ (Health)", short:"สุขภาพ", cls:"dim-2", v:"--d2",
+   help:"อายุคาดเฉลี่ย ผู้ป่วยในและผู้ป่วยนอก สาเหตุการตาย พฤติกรรมสุขภาพ และระบบบริการสุขภาพ"},
+  {key:"สังคมและเศรษฐกิจ", short:"สังคมและเศรษฐกิจ", cls:"dim-3", v:"--d3",
+   help:"รายได้ ค่าใช้จ่าย หนี้สิน ความยากจน ความเหลื่อมล้ำ แรงงาน และการใช้จ่ายภาครัฐ"},
+  {key:"สิ่งแวดล้อมและโครงสร้างพื้นฐาน (Environment & Infrastructure)", short:"สิ่งแวดล้อมและโครงสร้างพื้นฐาน", cls:"dim-4", v:"--d4",
+   help:"พื้นที่สีเขียว การเข้าถึงอินเทอร์เน็ต และความปลอดภัยในชีวิตและทรัพย์สิน"},
+  {key:"การศึกษาและพัฒนาศักยภาพ (Education & Human Capital)", short:"การศึกษาและพัฒนาศักยภาพ", cls:"dim-5", v:"--d5",
+   help:"คุณภาพการศึกษาและการพัฒนาศักยภาพของประชากร"},
+  {key:"การมีส่วนร่วมของประชาชน (Civic Engagement)", short:"การมีส่วนร่วมของประชาชน", cls:"dim-6", v:"--d6",
+   help:"การเข้าถึงบริการรัฐและการมีส่วนร่วมในกิจการสาธารณะ"},
+  {key:"", short:"รอระบุมิติ", cls:"dim-0", v:"--d0",
+   help:"แหล่งข้อมูลที่ยังไม่ได้ระบุมิติในทะเบียน"}
+];
+const el = id => document.getElementById(id);
+const esc = s => String(s??"").replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const dimOf = k => DIMS.find(d=>d.key===k) || DIMS[DIMS.length-1];
+/* ชุดข้อมูลบางชุดครอบคลุมหลายมิติ — dims เก็บทุกมิติ โดย dim คือมิติหลัก */
+const dimsOf = it => (it.dims && it.dims.length) ? it.dims : [it.dim || ""];
+
+/* ---------- theme ---------- */
+(function(){
+  let saved=null; try{ saved=localStorage.getItem("ds-theme"); }catch(e){}
+  if(saved) document.documentElement.setAttribute("data-theme",saved);
+  el("themeBtn").addEventListener("click",()=>{
+    const cur=document.documentElement.getAttribute("data-theme");
+    const sysDark=matchMedia("(prefers-color-scheme: dark)").matches;
+    const next = cur ? (cur==="dark"?"light":"dark") : (sysDark?"light":"dark");
+    document.documentElement.setAttribute("data-theme",next);
+    try{ localStorage.setItem("ds-theme",next); }catch(e){}
+  });
+})();
+
+/* ---------- pieces ---------- */
+function hl(text, q){
+  const t = esc(text);
+  if(!q) return t;
+  const i = t.toLowerCase().indexOf(q);
+  if(i<0) return t;
+  return t.slice(0,i)+"<mark>"+t.slice(i,i+q.length)+"</mark>"+t.slice(i+q.length);
+}
+function dimChips(it){
+  return dimsOf(it).map(k=>{ const d=dimOf(k);
+    return `<span class="chip dim ${d.cls}">${esc(d.short)}</span>`; }).join("");
+}
+function metaChips(it){
+  const c=[];
+  if(it.level) c.push(`<span class="chip">${esc(it.level)}</span>`);
+  if(it.years) c.push(`<span class="chip mono">${esc(it.years)}</span>`);
+  if(it.freq)  c.push(`<span class="chip">${esc(it.freq)}</span>`);
+  if(it.ftype) c.push(`<span class="chip">${esc(it.ftype)}</span>`);
+  c.push(it.urls.length ? `<span class="chip good">มีลิงก์</span>` : `<span class="chip warn">ยังไม่มีลิงก์</span>`);
+  if(it.added) c.push(`<span class="chip" style="border-style:dashed">ลิงก์ที่ค้นเพิ่ม</span>`);
+  if(dimsOf(it).length>1) c.push(`<span class="chip">อยู่ใน ${dimsOf(it).length} มิติ</span>`);
+  return c.join("");
+}
+
+/* ---------- detail ---------- */
+const dlg = el("dlg");
+function openDetail(it){
+  el("dlId").textContent = it.id;
+  el("dlDim").innerHTML = dimChips(it);
+  el("dlName").textContent = it.name;
+  const rows=[
+    ["ช่วงปีข้อมูล", it.years], ["ระดับพื้นที่", it.level], ["ความถี่", it.freq],
+    ["รูปแบบไฟล์", it.ftype], ["หน่วยงาน/แหล่ง", it.org],
+    ["รายละเอียด", it.detail], ["วิธีการคำนวณ", it.method]
+  ].filter(r=>r[1]);
+  let html = `<dl class="kv">${rows.map(r=>`<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl>`;
+  if(it.note) html += `<div class="note">${esc(it.note)}</div>`;
+  if(it.urls.length){
+    html += `<div><div class="eyebrow" style="margin-bottom:7px">ลิงก์แหล่งข้อมูล</div><div class="links">${
+      it.urls.map(u=>{ let l=u; try{ l=decodeURIComponent(u); }catch(e){}
+        if(l.length>110) l=l.slice(0,110)+"…";
+        return `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a>`; }).join("")
+    }</div></div>`;
+  } else {
+    html += `<div class="note warn">ยังไม่มีลิงก์ดาวน์โหลดในทะเบียน — ต้องติดต่อขอข้อมูลจากหน่วยงานเจ้าของโดยตรง</div>`;
+  }
+  el("dlBody").innerHTML = html;
+  dlg.showModal();
+}
+el("dlClose").addEventListener("click",()=>dlg.close());
+dlg.addEventListener("click", e=>{ if(e.target===dlg) dlg.close(); });
+
+/* ---------- render ---------- */
+const SECTIONS = DIMS.map(d=>({d, items: DATA.filter(x=>dimsOf(x).includes(d.key))}))
+                     .filter(s=>s.items.length);
+
+el("dimnav").innerHTML = SECTIONS.map(s=>
+  `<a href="#sec-${s.d.cls}"><span class="dot" style="background:var(${s.d.v})"></span>${esc(s.d.short)} <span class="c">${s.items.length}</span></a>`
+).join("");
+
+el("sections").innerHTML = SECTIONS.map(s=>`
+  <section class="sec" id="sec-${s.d.cls}" style="--secline:var(${s.d.v})">
+    <div class="sec-head">
+      <h2>${esc(s.d.short)}</h2>
+      <span class="n" data-n>${s.items.length} ชุดข้อมูล</span>
+      <span class="desc">${esc(s.d.help)}</span>
+    </div>
+    <div class="grid">${s.items.map(it=>`
+      <button class="card" data-id="${esc(it.id)}" data-sec="${s.d.cls}">
+        <span class="idline"><span class="mono id">${esc(it.id)}</span>${
+          dimsOf(it).filter(k=>k!==s.d.key).map(k=>{const dd=dimOf(k);
+            return `<span class="chip dim ${dd.cls}" style="font-size:11.5px">${esc(dd.short)}</span>`;}).join("")
+        }</span>
+        <h3 data-name>${esc(it.name)}</h3>
+        ${it.org?`<span class="org" data-org>${esc(it.org)}</span>`:""}
+        <span class="tags">${metaChips(it)}</span>
+      </button>`).join("")}
+    </div>
+  </section>`).join("");
+
+const CARDS = [...document.querySelectorAll(".card")];
+CARDS.forEach(b=>b.addEventListener("click",()=>openDetail(DATA.find(d=>d.id===b.dataset.id))));
+
+/* ---------- search ---------- */
+function haystack(it){
+  return [it.id,it.name,it.org,it.note,it.detail,it.method,it.level,it.years,it.freq,it.ftype,
+          dimsOf(it).map(k=>dimOf(k).short).join(" ")].join(" ").toLowerCase();
+}
+const HAY = new Map(DATA.map(it=>[it.id, haystack(it)]));
+
+function search(){
+  const q = el("q").value.trim().toLowerCase();
+  el("clr").hidden = !q;
+  let shown = 0;
+  const seen = new Set();
+  document.querySelectorAll(".sec").forEach(sec=>{
+    let n = 0;
+    sec.querySelectorAll(".card").forEach(card=>{
+      const it = DATA.find(d=>d.id===card.dataset.id);
+      const ok = !q || HAY.get(it.id).includes(q);
+      card.hidden = !ok;
+      if(ok){ n++; seen.add(it.id);
+        card.querySelector("[data-name]").innerHTML = hl(it.name, q);
+        const o = card.querySelector("[data-org]");
+        if(o) o.innerHTML = hl(it.org, q);
+      }
+    });
+    sec.hidden = n===0;
+    sec.querySelector("[data-n]").textContent = n + " ชุดข้อมูล";
+    shown += n;
+  });
+  el("hits").hidden = !q;
+  el("hits").textContent = q ? `พบ ${seen.size} ชุดข้อมูลที่ตรงกับ "${el("q").value.trim()}"` : "";
+  el("empty").hidden = shown>0;
+}
+el("q").addEventListener("input", search);
+el("clr").addEventListener("click",()=>{ el("q").value=""; el("q").focus(); search(); });
+
+el("brandCount").textContent = `${DATA.length} ชุดข้อมูล · ${SECTIONS.filter(s=>s.d.key).length} มิติ`;
+search();
+</script>
+</body>
+</html>
